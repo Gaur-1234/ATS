@@ -545,6 +545,3 @@ This project demonstrates:
 
 This is a demonstration project showcasing modern web development techniques and AI-powered recruitment workflows. Feel free to customize and extend it for your needs!
 
----
-
-**Built with 💙 for the future of recruitment technology**
