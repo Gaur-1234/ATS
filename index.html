@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Recruiter - Virtual Applicant Tracking System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="ai-logo">
+                <i class="fas fa-robot"></i>
+            </div>
+            <h2>Initializing AI Recruiter...</h2>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    
+    <section id="landingPage" class="section active">
+        <div class="particles" id="particles"></div>
+        
+        <nav class="navbar">
+            <div class="logo">
+                <i class="fas fa-robot"></i>
+                <span>AI Recruiter</span>
+            </div>
+            <div class="nav-links">
+                <a href="#" onclick="showSection('landingPage')">Home</a>
+                <a href="#" onclick="showSection('aboutPage')">About</a>
+                <a href="#" onclick="showSection('recruiterDashboard')">Recruiter</a>
+            </div>
+        </nav>
+
+        <div class="landing-hero">
+            <div class="ai-avatar-container">
+                <div class="ai-avatar">
+                    <i class="fas fa-robot"></i>
+                    <div class="avatar-pulse"></div>
+                </div>
+            </div>
+            
+            <h1 class="hero-title">
+                Your Virtual Recruiter
+                <span class="gradient-text">Powered by AI</span>
+            </h1>
+            
+            <p class="hero-subtitle">
+                Experience the future of recruitment with our AI-powered intelligent screening system
+            </p>
+            
+            <div class="cta-buttons">
+                <button class="btn btn-primary" onclick="showSection('applicationForm')">
+                    <i class="fas fa-briefcase"></i>
+                    Apply for Job
+                </button>
+                <button class="btn btn-secondary" onclick="showSection('candidateLogin')">
+                    <i class="fas fa-user"></i>
+                    Candidate Login
+                </button>
+                <button class="btn btn-accent" onclick="showSection('recruiterDashboard')">
+                    <i class="fas fa-chart-line"></i>
+                    Recruiter View
+                </button>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-brain"></i>
+                    <h3>AI-Powered Screening</h3>
+                    <p>Intelligent resume analysis and skill matching</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-comments"></i>
+                    <h3>Virtual Interviews</h3>
+                    <p>Interactive chat with AI recruiter</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-chart-pie"></i>
+                    <h3>Smart Analytics</h3>
+                    <p>Comprehensive candidate scoring</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <section id="applicationForm" class="section">
+        <button class="back-btn" onclick="showSection('landingPage')">
+            <i class="fas fa-arrow-left"></i> Back
+        </button>
+        
+        <div class="form-container">
+            <div class="form-header">
+                <h2>Apply for Position</h2>
+                <p>Fill in your details and let our AI analyze your profile</p>
+            </div>
+
+            <form id="jobApplicationForm" class="application-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Full Name</label>
+                        <input type="text" id="fullName" required placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" id="email" required placeholder="your.email@example.com">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-phone"></i> Phone</label>
+                        <input type="tel" id="phone" required placeholder="+1 (555) 000-0000">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> Location</label>
+                        <input type="text" id="location" required placeholder="City, Country">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fab fa-linkedin"></i> LinkedIn Profile</label>
+                        <input type="url" id="linkedin" placeholder="https://linkedin.com/in/yourprofile">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fab fa-github"></i> GitHub Profile</label>
+                        <input type="url" id="github" placeholder="https://github.com/yourusername">
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label><i class="fas fa-file-upload"></i> Upload Resume</label>
+                    <div class="file-upload-area" id="fileUploadArea">
+                        <input type="file" id="resumeFile" accept=".pdf,.doc,.docx" hidden>
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag and drop your resume here or <span class="upload-link">browse</span></p>
+                        <span class="file-info">Supported: PDF, DOC, DOCX (Max 5MB)</span>
+                    </div>
+                    <div id="uploadedFileName" class="uploaded-file"></div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label><i class="fas fa-cogs"></i> Key Skills</label>
+                    <input type="text" id="skills" placeholder="e.g., JavaScript, Python, React, Project Management">
+                    <small>Separate skills with commas</small>
+                </div>
+
+                <div class="form-group full-width">
+                    <label><i class="fas fa-briefcase"></i> Years of Experience</label>
+                    <select id="experience">
+                        <option value="">Select experience level</option>
+                        <option value="0-1">0-1 years (Entry Level)</option>
+                        <option value="1-3">1-3 years</option>
+                        <option value="3-5">3-5 years</option>
+                        <option value="5-8">5-8 years</option>
+                        <option value="8+">8+ years (Senior)</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-large">
+                    <i class="fas fa-paper-plane"></i>
+                    Submit Application
+                </button>
+            </form>
+        </div>
+    </section>
+
+    
+    <section id="resumeAnalysis" class="section">
+        <button class="back-btn" onclick="showSection('applicationForm')">
+            <i class="fas fa-arrow-left"></i> Back
+        </button>
+        
+        <div class="analysis-container">
+            <div class="analysis-header">
+                <div class="ai-thinking">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h2>AI Resume Analysis</h2>
+                <p>Parsing and analyzing your profile...</p>
+            </div>
+
+            <div id="analysisProgress" class="analysis-progress">
+                <div class="progress-item">
+                    <span>Extracting information</span>
+                    <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
+                </div>
+                <div class="progress-item">
+                    <span>Analyzing skills</span>
+                    <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
+                </div>
+                <div class="progress-item">
+                    <span>Matching job requirements</span>
+                    <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
+                </div>
+                <div class="progress-item">
+                    <span>Generating compatibility score</span>
+                    <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
+                </div>
+            </div>
+
+            <div id="extractedData" class="extracted-data" style="display: none;">
+                <h3>Extracted Information</h3>
+                <div class="data-cards">
+                    <div class="data-card">
+                        <h4><i class="fas fa-cogs"></i> Skills Identified</h4>
+                        <div id="extractedSkills" class="skill-tags"></div>
+                    </div>
+                    <div class="data-card">
+                        <h4><i class="fas fa-graduation-cap"></i> Education</h4>
+                        <div id="extractedEducation"></div>
+                    </div>
+                    <div class="data-card">
+                        <h4><i class="fas fa-briefcase"></i> Experience</h4>
+                        <div id="extractedExperience"></div>
+                    </div>
+                    <div class="data-card">
+                        <h4><i class="fas fa-certificate"></i> Certifications</h4>
+                        <div id="extractedCertifications"></div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onclick="showSection('aiRecruiter')">
+                    <i class="fas fa-comments"></i>
+                    Continue to AI Interview
+                </button>
+            </div>
+        </div>
+    </section>
+
+    
+    <section id="aiRecruiter" class="section">
+        <button class="back-btn" onclick="showSection('resumeAnalysis')">
+            <i class="fas fa-arrow-left"></i> Back
+        </button>
+        
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="recruiter-avatar">
+                    <i class="fas fa-robot"></i>
+                    <span class="online-indicator"></span>
+                </div>
+                <div class="recruiter-info">
+                    <h3>AI Recruiter</h3>
+                    <p>Virtual HR Assistant</p>
+                </div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="message ai-message">
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-content">
+                        <p>Hello! I'm your AI recruiter. I'll be conducting your initial screening interview today. Let's get to know each other better!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-area">
+                <input type="text" id="chatInput" placeholder="Type your response..." disabled>
+                <button id="sendMessageBtn" class="send-btn" disabled>
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+
+            <div class="quick-responses" id="quickResponses"></div>
+        </div>
+    </section>
+
+    
+    <section id="profileDashboard" class="section">
+        <button class="back-btn" onclick="showSection('aiRecruiter')">
+            <i class="fas fa-arrow-left"></i> Back
+        </button>
+        
+        <div class="dashboard-container">
+            <div class="dashboard-header">
+                <h2>Your Profile Analysis</h2>
+                <p>AI-generated compatibility report</p>
+            </div>
+
+            <div class="score-grid">
+                <div class="score-card">
+                    <div class="score-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h3>Skill Match</h3>
+                    <div class="circular-progress" data-score="0">
+                        <svg width="120" height="120">
+                            <circle cx="60" cy="60" r="50"></circle>
+                            <circle cx="60" cy="60" r="50" class="progress-circle"></circle>
+                        </svg>
+                        <div class="score-text">0%</div>
+                    </div>
+                </div>
+
+                <div class="score-card">
+                    <div class="score-icon">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <h3>Role Compatibility</h3>
+                    <div class="circular-progress" data-score="0">
+                        <svg width="120" height="120">
+                            <circle cx="60" cy="60" r="50"></circle>
+                            <circle cx="60" cy="60" r="50" class="progress-circle"></circle>
+                        </svg>
+                        <div class="score-text">0%</div>
+                    </div>
+                </div>
+
+                <div class="score-card">
+                    <div class="score-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3>Resume Quality</h3>
+                    <div class="circular-progress" data-score="0">
+                        <svg width="120" height="120">
+                            <circle cx="60" cy="60" r="50"></circle>
+                            <circle cx="60" cy="60" r="50" class="progress-circle"></circle>
+                        </svg>
+                        <div class="score-text">0%</div>
+                    </div>
+                </div>
+
+                <div class="score-card">
+                    <div class="score-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>ATS Optimization</h3>
+                    <div class="circular-progress" data-score="0">
+                        <svg width="120" height="120">
+                            <circle cx="60" cy="60" r="50"></circle>
+                            <circle cx="60" cy="60" r="50" class="progress-circle"></circle>
+                        </svg>
+                        <div class="score-text">0%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detailed-analysis">
+                <div class="analysis-section">
+                    <h3><i class="fas fa-star"></i> Strengths</h3>
+                    <div id="strengthsList" class="analysis-list"></div>
+                </div>
+
+                <div class="analysis-section">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Areas for Improvement</h3>
+                    <div id="improvementsList" class="analysis-list"></div>
+                </div>
+
+                <div class="analysis-section">
+                    <h3><i class="fas fa-lightbulb"></i> AI Recommendations</h3>
+                    <div id="recommendationsList" class="analysis-list"></div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="submitToRecruiter()">
+                    <i class="fas fa-check"></i>
+                    Submit to Recruiter
+                </button>
+                <button class="btn btn-secondary" onclick="showSection('applicationForm')">
+                    <i class="fas fa-edit"></i>
+                    Edit Application
+                </button>
+            </div>
+        </div>
+    </section>
+
+    
+    <section id="candidateLogin" class="section">
+        <button class="back-btn" onclick="showSection('landingPage')">
+            <i class="fas fa-arrow-left"></i> Back
+        </button>
+        
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <i class="fas fa-user-circle"></i>
+                    <h2>Candidate Portal</h2>
+                    <p>Access your application status</p>
+                </div>
+
+                <form id="candidateLoginForm" class="login-form">
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" required placeholder="your.email@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Application ID</label>
+                        <input type="text" required placeholder="Enter your application ID">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-large">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Login
+                    </button>
+                </form>
+
+                <div class="login-footer">
+                    <p>Don't have an application? <a href="#" onclick="showSection('applicationForm')">Apply Now</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <section id="recruiterDashboard" class="section">
+        <button class="back-btn" onclick="showSection('landingPage')">
+            <i class="fas fa-arrow-left"></i> Back
+        </button>
+        
+        <div class="recruiter-container">
+            <div class="recruiter-header">
+                <h2><i class="fas fa-briefcase"></i> Recruiter Dashboard</h2>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" onclick="generateSampleCandidates()">
+                        <i class="fas fa-sync"></i> Generate Sample Data
+                    </button>
+                </div>
+            </div>
+
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <i class="fas fa-users"></i>
+                    <div class="stat-info">
+                        <span class="stat-value" id="totalCandidates">0</span>
+                        <span class="stat-label">Total Applicants</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-user-check"></i>
+                    <div class="stat-info">
+                        <span class="stat-value" id="shortlistedCount">0</span>
+                        <span class="stat-label">Shortlisted</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-comments"></i>
+                    <div class="stat-info">
+                        <span class="stat-value" id="interviewReadyCount">0</span>
+                        <span class="stat-label">Interview Ready</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-trophy"></i>
+                    <div class="stat-info">
+                        <span class="stat-value" id="selectedCount">0</span>
+                        <span class="stat-label">Selected</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filters-bar">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="candidateSearch" placeholder="Search by name, skills, or location...">
+                </div>
+                
+                <select id="statusFilter" class="filter-select">
+                    <option value="all">All Status</option>
+                    <option value="Applied">Applied</option>
+                    <option value="Shortlisted">Shortlisted</option>
+                    <option value="Interview Ready">Interview Ready</option>
+                    <option value="Selected">Selected</option>
+                </select>
+
+                <select id="sortBy" class="filter-select">
+                    <option value="score">Sort by Score</option>
+                    <option value="date">Sort by Date</option>
+                    <option value="name">Sort by Name</option>
+                </select>
+            </div>
+
+            <div class="candidates-list" id="candidatesList">
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <h3>No candidates yet</h3>
+                    <p>Generate sample data to see candidates</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <div id="candidateModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    
+    <div id="successModal" class="modal">
+        <div class="modal-content success-modal-content">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>Application Submitted Successfully!</h2>
+            <p>Your application has been submitted to our recruiters. You'll receive an email with your application ID shortly.</p>
+            <div class="application-id">
+                <strong>Application ID:</strong> <span id="generatedAppId"></span>
+            </div>
+            <button class="btn btn-primary" onclick="closeSuccessModal()">
+                <i class="fas fa-home"></i> Return to Home
+            </button>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

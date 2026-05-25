@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Applicant Tracking System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ===== ROOT VARIABLES ===== */
+        :root {
+            /* Light Theme (Default) */
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #7c3aed;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-hover: #f1f5f9;
+            
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            
+            --border: #e2e8f0;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Dark Theme */
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --bg-hover: #334155;
+            
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            
+            --border: #334155;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .theme-toggle {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-hover);
+        }
+
+        /* ===== SECTIONS ===== */
+        .section {
+            display: none;
+            min-height: calc(100vh - 80px);
+            padding: 3rem 2rem;
+            animation: fadeIn 0.5s;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* ===== LANDING PAGE ===== */
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .hero-icon {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 4rem;
+            color: white;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 4rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 2px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            box-shadow: var(--shadow);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .feature-card i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+        }
+
+        /* ===== ABOUT SECTION ===== */
+        .about-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .about-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .about-card h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .about-card h3 {
+            color: var(--text-primary);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        .about-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .about-card ul li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .about-card ul li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        /* ===== DEVELOPER INFO WITH PROFILE PICTURES ===== */
+        .dev-info {
+            max-width: 900px;
+            margin: 2rem auto;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .dev-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .dev-header h2 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .dev-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .developers {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            margin: 2.5rem 0;
+        }
+
+        .developer {
+            text-align: center;
+            padding: 2rem;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .developer:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .dev-photo-container {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .dev-photo {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary);
+            box-shadow: var(--shadow-lg);
+            background: var(--bg-card);
+            display: block;
+        }
+
+        .dev-avatar-default {
+            width: 140px;
+            height: 140px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            border: 4px solid var(--primary);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .upload-overlay {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            border: 3px solid var(--bg-card);
+        }
+
+        .upload-overlay:hover {
+            background: var(--primary-dark);
+            transform: scale(1.1);
+        }
+
+        .dev-photo-input {
+            display: none;
+        }
+
+        .developer h3 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .developer .role {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+        }
+
+        .developer .email {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .institution {
+            text-align: center;
+            margin-top: 2.5rem;
+            padding-top: 2.5rem;
+            border-top: 2px solid var(--border);
+        }
+
+        .institution-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2.5rem;
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .institution h3 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.4rem;
+        }
+
+        .institution p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* ===== FORM STYLES ===== */
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .file-upload {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary);
+            background: var(--bg-secondary);
+        }
+
+        .file-upload i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        /* ===== CHAT INTERFACE ===== */
+        .chat-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .chat-header {
+            background: var(--primary);
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .chat-avatar {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+        }
+
+        .message {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .message-content {
+            background: var(--bg-card);
+            padding: 1rem;
+            border-radius: 8px;
+            max-width: 70%;
+            border: 1px solid var(--border);
+        }
+
+        .user-message {
+            flex-direction: row-reverse;
+        }
+
+        .user-message .message-avatar {
+            background: var(--secondary);
+        }
+
+        .user-message .message-content {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .chat-input {
+            padding: 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 1rem;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        /* ===== DASHBOARD ===== */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .stat-card h3 {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .progress-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 4px;
+            transition: width 1s ease-out;
+        }
+
+        /* ===== CANDIDATE LIST ===== */
+        .candidate-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: var(--shadow);
+        }
+
+        .candidate-card:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .candidate-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .candidate-info {
+            flex: 1;
+        }
+
+        .candidate-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .candidate-details {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .candidate-score {
+            text-align: center;
+            padding-left: 1.5rem;
+            border-left: 1px solid var(--border);
+        }
+
+        .score-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-applied {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+        }
+
+        .status-shortlisted {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--accent);
+        }
+
+        .status-interviewed {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        /* ===== FILTERS ===== */
+        .filters-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        select {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .nav-links a {
+                display: none;
+            }
+
+            .candidate-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .candidate-score {
+                border-left: none;
+                border-top: 1px solid var(--border);
+                padding-left: 0;
+                padding-top: 1rem;
+            }
+
+            .developers {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .back-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: var(--bg-hover);
+            border-color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <span>AI-ATS</span>
+            </div>
+            <div class="nav-links">
+                <a href="#" onclick="showSection('landing')">Home</a>
+                <a href="#" onclick="showSection('about')">About</a>
+                <a href="#" onclick="showSection('recruiter')">Dashboard</a>
+                <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Landing Page -->
+    <section id="landing" class="section active">
+        <div class="container">
+            <div class="hero">
+                <div class="hero-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h1>AI-Powered Applicant Tracking System</h1>
+                <p>Transform your hiring process with intelligent automation, smart candidate screening, and data-driven recruitment decisions</p>
+                
+                <div class="cta-buttons">
+                    <button class="btn btn-primary" onclick="showSection('application')">
+                        <i class="fas fa-paper-plane"></i>
+                        Apply for Job
+                    </button>
+                    <button class="btn btn-secondary" onclick="showSection('recruiter')">
+                        <i class="fas fa-chart-line"></i>
+                        Recruiter Dashboard
+                    </button>
+                </div>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-brain"></i>
+                    <h3>AI-Powered Screening</h3>
+                    <p>Intelligent resume analysis and automatic candidate ranking</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-clock"></i>
+                    <h3>Save Time</h3>
+                    <p>Reduce hiring time by 70% with automated workflows</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-chart-pie"></i>
+                    <h3>Smart Analytics</h3>
+                    <p>Data-driven insights for better hiring decisions</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Better Matches</h3>
+                    <p>Find the perfect candidate with AI matching algorithms</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Reduce Bias</h3>
+                    <p>Fair and unbiased candidate evaluation</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-sync"></i>
+                    <h3>Automation</h3>
+                    <p>Streamline repetitive tasks and focus on people</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About ATS Section -->
+    <section id="about" class="section">
+        <div class="container">
+            <button class="back-btn" onclick="showSection('landing')">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </button>
+            
+            <div class="about-content">
+                <div class="about-card">
+                    <h2><i class="fas fa-info-circle"></i> About the Platform</h2>
+                    <p>An Applicant Tracking System (ATS) is a software application that enables the electronic handling of recruitment and hiring needs. Modern ATS platforms integrate artificial intelligence to revolutionize how organizations find, evaluate, and hire talent.</p>
+                    
+                    <h3>What is an ATS?</h3>
+                    <p>An ATS helps companies organize candidates for hiring and recruitment purposes. It collects and stores candidate information, tracks candidates throughout the hiring process, and provides tools for recruiting teams to collaborate and make informed decisions.</p>
+                </div>
+
+                <div class="about-card">
+                    <h2><i class="fas fa-star"></i> Why AI-Based ATS is Important</h2>
+                    <ul>
+                        <li><strong>Efficiency at Scale:</strong> Process thousands of applications in minutes, not weeks</li>
+                        <li><strong>Quality of Hire:</strong> AI algorithms identify candidates who are most likely to succeed</li>
+                        <li><strong>Reduced Bias:</strong> Objective evaluation based on skills and qualifications</li>
+                        <li><strong>Cost Savings:</strong> Reduce cost-per-hire by up to 50% through automation</li>
+                        <li><strong>Better Experience:</strong> Faster response times improve candidate satisfaction</li>
+                        <li><strong>Data-Driven Decisions:</strong> Analytics and insights guide recruitment strategy</li>
+                    </ul>
+                </div>
+
+                <div class="about-card">
+                    <h2><i class="fas fa-users-cog"></i> How It Helps Recruiters</h2>
+                    <ul>
+                        <li>Automatic resume parsing and candidate profile creation</li>
+                        <li>AI-powered candidate ranking and scoring</li>
+                        <li>Smart job matching based on skills and experience</li>
+                        <li>Automated screening questions and initial assessments</li>
+                        <li>Centralized candidate database with powerful search</li>
+                        <li>Collaboration tools for hiring team coordination</li>
+                        <li>Interview scheduling and communication automation</li>
+                        <li>Comprehensive analytics and reporting dashboards</li>
+                    </ul>
+                </div>
+
+                <div class="about-card">
+                    <h2><i class="fas fa-rocket"></i> Key Features</h2>
+                    <h3>AI Integration</h3>
+                    <ul>
+                        <li>Natural Language Processing for resume analysis</li>
+                        <li>Machine Learning algorithms for candidate matching</li>
+                        <li>Predictive analytics for hiring success</li>
+                        <li>Automated candidate screening and ranking</li>
+                        <li>Intelligent job recommendations</li>
+                    </ul>
+
+                    <h3>Automation Benefits</h3>
+                    <ul>
+                        <li>70% faster time-to-hire</li>
+                        <li>90% reduction in manual resume screening</li>
+                        <li>50% improvement in candidate quality</li>
+                        <li>Automated email communications and follow-ups</li>
+                        <li>One-click interview scheduling</li>
+                    </ul>
+
+                    <h3>Modern Recruitment Advantages</h3>
+                    <ul>
+                        <li>Mobile-friendly application process</li>
+                        <li>Real-time collaboration for hiring teams</li>
+                        <li>Integration with job boards and social media</li>
+                        <li>Compliance and equal opportunity tracking</li>
+                        <li>Candidate relationship management</li>
+                    </ul>
+                </div>
+
+                <div class="about-card">
+                    <h2><i class="fas fa-trophy"></i> Why Choose This ATS</h2>
+                    <ul>
+                        <li><strong>Cutting-Edge AI:</strong> Latest machine learning models for superior accuracy</li>
+                        <li><strong>User-Friendly Interface:</strong> Intuitive design that requires minimal training</li>
+                        <li><strong>Scalable Solution:</strong> Grows with your organization from 10 to 10,000 employees</li>
+                        <li><strong>Comprehensive Analytics:</strong> Deep insights into your recruitment pipeline</li>
+                        <li><strong>Outstanding Support:</strong> Dedicated customer success team</li>
+                        <li><strong>Continuous Innovation:</strong> Regular updates with new AI capabilities</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Developer Info with Profile Pictures -->
+            <div class="dev-info">
+                <div class="dev-header">
+                    <h2>Developed By</h2>
+                    <p>Academic Research Project</p>
+                </div>
+
+                <div class="developers">
+                    <!-- Developer 1: Lavanya Saxena -->
+                    <div class="developer">
+                        <div class="dev-photo-container">
+                            <img id="devPhoto1" 
+                                 src="https://www.genspark.ai/api/files/s/On79vJsi" 
+                                 alt="Lavanya Saxena" 
+                                 class="dev-photo">
+                            <div class="upload-overlay" onclick="document.getElementById('photoInput1').click()">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                            <input type="file" 
+                                   id="photoInput1" 
+                                   class="dev-photo-input" 
+                                   accept="image/*" 
+                                   onchange="updatePhoto(1, this)">
+                        </div>
+                        <h3>Lavanya Saxena</h3>
+                        <p class="role">Developer</p>
+                    </div>
+
+                    <!-- Developer 2: Gaurank Verma -->
+                    <div class="developer">
+                        <div class="dev-photo-container">
+                            <img id="devPhoto2" 
+                                 src="https://www.genspark.ai/api/files/s/Dk1z6e6N" 
+                                 alt="Gaurank Verma" 
+                                 class="dev-photo">
+                            <div class="upload-overlay" onclick="document.getElementById('photoInput2').click()">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                            <input type="file" 
+                                   id="photoInput2" 
+                                   class="dev-photo-input" 
+                                   accept="image/*" 
+                                   onchange="updatePhoto(2, this)">
+                        </div>
+                        <h3>Gaurank Verma</h3>
+                        <p class="role">Developer</p>
+                    </div>
+                </div>
+
+                <div class="institution">
+                    <div class="institution-logo">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <h3>SRM Institute of Science and Technology</h3>
+                    <p>SRMIST</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Application Form -->
+    <section id="application" class="section">
+        <div class="container">
+            <button class="back-btn" onclick="showSection('landing')">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+
+            <div class="form-container">
+                <h2 style="margin-bottom: 1.5rem; color: var(--primary);">Apply for Position</h2>
+                
+                <form id="applicationForm">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" required placeholder="Enter your full name">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" required placeholder="your.email@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" required placeholder="+1 (555) 000-0000">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Skills (comma separated)</label>
+                        <input type="text" required placeholder="e.g., JavaScript, Python, Project Management">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Resume Upload</label>
+                        <div class="file-upload">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Click or drag file to upload</p>
+                            <input type="file" hidden id="resumeFile" accept=".pdf,.doc,.docx">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-paper-plane"></i>
+                        Submit Application
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Recruiter Chat -->
+    <section id="aiRecruiter" class="section">
+        <div class="container">
+            <button class="back-btn" onclick="showSection('application')">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+
+            <div class="chat-container">
+                <div class="chat-header">
+                    <div class="chat-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div>
+                        <h3 style="margin: 0;">AI Recruiter</h3>
+                        <p style="margin: 0; opacity: 0.9; font-size: 0.9rem;">Virtual HR Assistant</p>
+                    </div>
+                </div>
+
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <p>Hello! I'm your AI recruiter. Let me ask you a few questions to better understand your profile.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-input">
+                    <input type="text" placeholder="Type your answer..." id="chatInput">
+                    <button class="btn btn-primary" onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Profile Dashboard -->
+    <section id="profileDash" class="section">
+        <div class="container">
+            <button class="back-btn" onclick="showSection('aiRecruiter')">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+
+            <h2 style="margin-bottom: 2rem; color: var(--primary);">Your Profile Analysis</h2>
+
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <h3>Overall Score</h3>
+                    <div class="stat-value">87%</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Skill Match</h3>
+                    <div class="stat-value">92%</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Resume Quality</h3>
+                    <div class="stat-value">85%</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Role Compatibility</h3>
+                    <div class="stat-value">88%</div>
+                </div>
+            </div>
+
+            <div class="progress-card">
+                <div class="progress-header">
+                    <h3>Skill Match Analysis</h3>
+                    <span>92%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 92%"></div>
+                </div>
+            </div>
+
+            <div class="progress-card">
+                <div class="progress-header">
+                    <h3>Resume Quality Score</h3>
+                    <span>85%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 85%"></div>
+                </div>
+            </div>
+
+            <div class="progress-card">
+                <div class="progress-header">
+                    <h3>Role Compatibility</h3>
+                    <span>88%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 88%"></div>
+                </div>
+            </div>
+
+            <div class="progress-card">
+                <div class="progress-header">
+                    <h3>ATS Optimization</h3>
+                    <span>90%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 90%"></div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="showSection('landing')" style="width: 100%; margin-top: 2rem;">
+                <i class="fas fa-check"></i>
+                Complete Application
+            </button>
+        </div>
+    </section>
+
+    <!-- Recruiter Dashboard -->
+    <section id="recruiter" class="section">
+        <div class="container">
+            <button class="back-btn" onclick="showSection('landing')">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+
+            <h2 style="margin-bottom: 2rem; color: var(--primary);">Recruiter Dashboard</h2>
+
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <h3>Total Applicants</h3>
+                    <div class="stat-value">147</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Shortlisted</h3>
+                    <div class="stat-value">32</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Interviewed</h3>
+                    <div class="stat-value">18</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Hired</h3>
+                    <div class="stat-value">5</div>
+                </div>
+            </div>
+
+            <div class="filters-bar">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search candidates...">
+                </div>
+                <select>
+                    <option>All Status</option>
+                    <option>Applied</option>
+                    <option>Shortlisted</option>
+                    <option>Interviewed</option>
+                </select>
+                <select>
+                    <option>Sort by Score</option>
+                    <option>Sort by Date</option>
+                    <option>Sort by Name</option>
+                </select>
+            </div>
+
+            <div id="candidateList">
+                <div class="candidate-card">
+                    <div class="candidate-avatar">SJ</div>
+                    <div class="candidate-info">
+                        <div class="candidate-name">Sarah Johnson</div>
+                        <div class="candidate-details">
+                            Senior Software Engineer • 8 years experience<br>
+                            <span class="status-badge status-shortlisted">Shortlisted</span>
+                        </div>
+                    </div>
+                    <div class="candidate-score">
+                        <div class="score-value">95</div>
+                        <div class="score-label">Match Score</div>
+                    </div>
+                </div>
+
+                <div class="candidate-card">
+                    <div class="candidate-avatar">MC</div>
+                    <div class="candidate-info">
+                        <div class="candidate-name">Michael Chen</div>
+                        <div class="candidate-details">
+                            Product Manager • 6 years experience<br>
+                            <span class="status-badge status-interviewed">Interviewed</span>
+                        </div>
+                    </div>
+                    <div class="candidate-score">
+                        <div class="score-value">92</div>
+                        <div class="score-label">Match Score</div>
+                    </div>
+                </div>
+
+                <div class="candidate-card">
+                    <div class="candidate-avatar">ER</div>
+                    <div class="candidate-info">
+                        <div class="candidate-name">Emily Rodriguez</div>
+                        <div class="candidate-details">
+                            UX Designer • 5 years experience<br>
+                            <span class="status-badge status-applied">Applied</span>
+                        </div>
+                    </div>
+                    <div class="candidate-score">
+                        <div class="score-value">88</div>
+                        <div class="score-label">Match Score</div>
+                    </div>
+                </div>
+
+                <div class="candidate-card">
+                    <div class="candidate-avatar">DK</div>
+                    <div class="candidate-info">
+                        <div class="candidate-name">David Kim</div>
+                        <div class="candidate-details">
+                            Data Scientist • 7 years experience<br>
+                            <span class="status-badge status-shortlisted">Shortlisted</span>
+                        </div>
+                    </div>
+                    <div class="candidate-score">
+                        <div class="score-value">91</div>
+                        <div class="score-label">Match Score</div>
+                    </div>
+                </div>
+
+                <div class="candidate-card">
+                    <div class="candidate-avatar">JW</div>
+                    <div class="candidate-info">
+                        <div class="candidate-name">Jessica Williams</div>
+                        <div class="candidate-details">
+                            Marketing Manager • 4 years experience<br>
+                            <span class="status-badge status-applied">Applied</span>
+                        </div>
+                    </div>
+                    <div class="candidate-score">
+                        <div class="score-value">85</div>
+                        <div class="score-label">Match Score</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Section Navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        // Theme Toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeToggle = document.getElementById('themeToggle');
+            const currentTheme = html.getAttribute('data-theme');
+            
+            if (currentTheme === 'dark') {
+                html.removeAttribute('data-theme');
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+        }
+
+        // Profile Photo Update Function
+        function updatePhoto(devId, input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const photoElement = document.getElementById('devPhoto' + devId);
+                    photoElement.src = e.target.result;
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Application Form
+        document.getElementById('applicationForm')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            showSection('aiRecruiter');
+            startChat();
+        });
+
+        // File Upload
+        document.querySelector('.file-upload')?.addEventListener('click', () => {
+            document.getElementById('resumeFile').click();
+        });
+
+        document.getElementById('resumeFile')?.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                const fileName = e.target.files[0].name;
+                document.querySelector('.file-upload p').textContent = `Selected: ${fileName}`;
+            }
+        });
+
+        // Chat Functionality
+        let chatQuestions = [
+            "What are your primary career goals?",
+            "What technical skills do you excel at?",
+            "How many years of professional experience do you have?",
+            "What type of role are you looking for?"
+        ];
+        let currentQuestion = 0;
+
+        function startChat() {
+            setTimeout(() => {
+                askQuestion();
+            }, 1000);
+        }
+
+        function askQuestion() {
+            if (currentQuestion < chatQuestions.length) {
+                const chatMessages = document.getElementById('chatMessages');
+                const message = document.createElement('div');
+                message.className = 'message';
+                message.innerHTML = `
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-content">
+                        <p>${chatQuestions[currentQuestion]}</p>
+                    </div>
+                `;
+                chatMessages.appendChild(message);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            } else {
+                setTimeout(() => {
+                    showSection('profileDash');
+                }, 1000);
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                const chatMessages = document.getElementById('chatMessages');
+                const userMsg = document.createElement('div');
+                userMsg.className = 'message user-message';
+                userMsg.innerHTML = `
+                    <div class="message-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="message-content">
+                        <p>${message}</p>
+                    </div>
+                `;
+                chatMessages.appendChild(userMsg);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                input.value = '';
+                
+                currentQuestion++;
+                setTimeout(askQuestion, 1000);
+            }
+        }
+
+        document.getElementById('chatInput')?.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
