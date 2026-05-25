@@ -544,4 +544,5 @@ This project demonstrates:
 ## 📞 Support & Feedback
 
 This is a demonstration project showcasing modern web development techniques and AI-powered recruitment workflows. Feel free to customize and extend it for your needs!
-
+---
+Contributor: Gaur-1234
